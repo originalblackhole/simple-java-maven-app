@@ -1,13 +1,16 @@
 pipeline {
-    pom = readMavenPom file: 'location/pom.xml'
-    docker_img_name = "myapp/test"
-    build_tag = "latest"
+
     agent {
         docker {
             image 'maven:3-alpine'
             args '-v /root/.m2:/root/.m2'
         }
     }
+    environment {
+    		pom = readMavenPom file: 'location/pom.xml'
+            docker_img_name = "myapp/test"
+            build_tag = "latest"
+    	}
     stages {
         stage('Build ----------- >') {
             steps {
