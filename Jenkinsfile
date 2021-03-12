@@ -1,19 +1,18 @@
 pipeline {
-
     agent {
         docker {
             image 'maven:3-alpine'
             args '-v /root/.m2:/root/.m2'
         }
     }
-    environment {
-    		pom = readMavenPom file: 'location/pom.xml'
-            docker_img_name = "myapp/test"
-            build_tag = "latest"
-    	}
     stages {
         stage('Build ----------- >') {
             steps {
+                script{
+                    pom = readMavenPom file: 'location/pom.xml'
+                    docker_img_name = "myapp/test"
+                    build_tag = "latest"
+                }
                 sh 'mvn -B -DskipTests clean package'
                 sh "docker build -t ${docker_img_name}:${build_tag} --build-arg SPRING_PROFILE=prod --build-arg JAR_FILE=target/${pom.artifactId}-${pom.version}.jar ./location/"
             }
