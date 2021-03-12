@@ -18,8 +18,9 @@ pipeline {
             }
         }
         stage('Build Docker'){
-            sh 'docker login http://ccr.ccs.tencentyun.com/blackhole/jenkins -u 100018063721 -p gm152688'
-            sh 'docker push maven:3-alpine'
+            steps {
+                sh './jenkins/scripts/deploy.sh'
+            }
         }
     }
 }
