@@ -17,5 +17,13 @@ pipeline {
                 sh './jenkins/scripts/deliver.sh'
             }
         }
+        stage('Build Docker'){
+        	// 构建上传镜像到容器仓库
+            def customImage = docker.build("my-app", "--build-arg PRO_ENV=test .")
+            docker.withRegistry("https://ccr.ccs.tencentyun.com/blackhole/jenkins", 'jenkins') {
+                /* Push the container to the custom Registry */
+                customImage.push()
+            }
+        }
     }
 }
