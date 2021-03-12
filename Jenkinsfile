@@ -1,4 +1,7 @@
 pipeline {
+    pom = readMavenPom file: 'location/pom.xml'
+    docker_img_name = "myapp/test"
+    build_tag = "latest"
     agent {
         docker {
             image 'maven:3-alpine'
@@ -6,18 +9,19 @@ pipeline {
         }
     }
     stages {
-        stage('Build') {
+        stage('Build ----------- >') {
             steps {
                 sh 'mvn -B -DskipTests clean package'
+                sh "docker build -t ${docker_img_name}:${build_tag} --build-arg SPRING_PROFILE=prod --build-arg JAR_FILE=target/${pom.artifactId}-${pom.version}.jar ./location/"
             }
         }
         
-        stage('Deliver') {
+        stage('Deliver ----------- >') {
             steps {
                 sh './jenkins/scripts/deliver.sh'
             }
         }
-        stage('Build Docker'){
+        stage('deploy ----------- >'){
             steps {
                 sh 'sudo ./jenkins/scripts/deploy.sh'
                 //sh 'docker login http://ccr.ccs.tencentyun.com/blackhole/jenkins -u 100018063721 -p gm152688'
