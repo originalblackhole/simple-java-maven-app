@@ -13,8 +13,9 @@ pipeline {
                     docker_img_name = "myapp/test"
                     build_tag = "latest"
                 }
+                //echo "Hello ${build_tag}"
                 sh 'mvn -B -DskipTests clean package'
-                sh "docker build -t ${docker_img_name}:${build_tag} --build-arg SPRING_PROFILE=prod --build-arg JAR_FILE=target/${pom.artifactId}-${pom.version}.jar ./location/"
+                sh "docker build -t myapp/test:latest --build-arg SPRING_PROFILE=prod --build-arg JAR_FILE=target/my-app-1.0-SNAPSHOT.jar ./location/"
             }
         }
         
